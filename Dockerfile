@@ -16,7 +16,8 @@ RUN dotnet publish "OllaInvoice.Api.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "OllaInvoice.Api.dll"]
+#ENTRYPOINT ["dotnet", "OllaInvoice.Api.dll"]
+CMD ASPNETCORE_URLS=http://*:$ dotnet OllaInvoice.Api.dll
 
 
 
