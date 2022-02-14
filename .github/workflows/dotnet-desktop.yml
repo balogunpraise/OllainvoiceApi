@@ -1,0 +1,21 @@
+name: ollainvoice
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Deploying ollainvoice api
+      env:
+        HEROKU_API_KEY: 231e3ae7-32d2-48fd-bc10-526f1dc4367c
+        APP_NAME: ollainvoice-api
+      run: |
+        docker build -t ollainvoice .
+        docker tag ollainvoice registry.heroku.com
+        docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+        heroku container:push web -a $APP_NAME
+        heroku container:release web -a $APP_NAME
