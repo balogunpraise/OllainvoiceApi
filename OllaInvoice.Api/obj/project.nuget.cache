@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "iw0gP4k60OXPJ3Ectcp4qzLWwNQ4bnAh160lmgFHCvaHg28X2n9K9yTTMCMblGmnEc4gfvZ2daVtU3GDdtiakg==",
+  "dgSpecHash": "DDobViixfnQEiMZykx+qwAU+7nJLlwzLt7iROyNlKS8b1+JaOWRVXLyurqbqgkXMbWY0lXIouPaT72KUJ8yY6g==",
   "success": true,
   "projectFilePath": "C:\\Users\\David\\Desktop\\Project\\OllaInvoice\\OllaInvoice.Api\\OllaInvoice.Api.csproj",
   "expectedPackageFiles": [
@@ -10,6 +10,7 @@
     "C:\\Users\\David\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\5.0.14\\microsoft.aspnetcore.cryptography.internal.5.0.14.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\5.0.14\\microsoft.aspnetcore.cryptography.keyderivation.5.0.14.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\microsoft.aspnetcore.identity.entityframeworkcore\\5.0.14\\microsoft.aspnetcore.identity.entityframeworkcore.5.0.14.nupkg.sha512",
+    "C:\\Users\\David\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\5.0.14\\microsoft.aspnetcore.jsonpatch.5.0.14.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.extensions\\3.0.0\\microsoft.aspnetcore.mvc.razor.extensions.3.0.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.runtimecompilation\\3.0.0\\microsoft.aspnetcore.mvc.razor.runtimecompilation.3.0.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\3.0.0\\microsoft.aspnetcore.razor.language.3.0.0.nupkg.sha512",
@@ -72,6 +73,7 @@
     "C:\\Users\\David\\.nuget\\packages\\microsoft.win32.registry\\4.6.0\\microsoft.win32.registry.4.6.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\mimekit\\2.6.0\\mimekit.2.6.0.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\netcore.mailkit\\2.0.3\\netcore.mailkit.2.0.3.nupkg.sha512",
+    "C:\\Users\\David\\.nuget\\packages\\newtonsoft.json\\12.0.2\\newtonsoft.json.12.0.2.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\portable.bouncycastle\\1.8.5\\portable.bouncycastle.1.8.5.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\David\\.nuget\\packages\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",

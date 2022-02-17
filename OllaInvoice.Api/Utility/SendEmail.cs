@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 using OllaInvoice.Api.Services;
 using OllaInvoice.Data;
 using System;
@@ -22,11 +23,11 @@ namespace OllaInvoice.Api.Utility
         }
 
 
-        public async Task SendInvoiceAsAttachmentAsync(string emailAddress)
+        public async Task SendInvoiceAsAttachmentAsync(string emailAddress, int id)
         {
-            string emailTitle = "Purchase invoice";
-            string emailBody = "";
-            var result = _invoiceRepository.GetInvoice();
+            string emailTitle = "Purchase Invoice";
+            string emailBody = "Click the attachment file below to download your invoice";
+            var result = await _invoiceRepository.GetCurrentInvoice(id);
             var pdfFile = await _generatePdf.GetPdf(@"~/Templates/template.cshtml", result);
             var formFileType = HelperMethods.ReturnFormFile((FileStreamResult)pdfFile);
             try
@@ -44,7 +45,7 @@ namespace OllaInvoice.Api.Utility
             try
             {
                 var message = new Message(new string[] { emailAddress }, emailTitle, emailBody);
-                await _emailSender.SendEmailVerificationAsync(message);
+                await _emailSender.SendMailAttachmentsAsync(message);
             }
             catch (Exception ex)
             {
@@ -53,6 +54,7 @@ namespace OllaInvoice.Api.Utility
         }
 
 
+        
         public async Task SendConfirmationEmail(string emailAddress, string emailBody)
         {
             string emailTitle = "Email Verification";

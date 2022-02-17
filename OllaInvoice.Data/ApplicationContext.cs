@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using OllaInvoice.Entities;
 using OllaInvoice.Entities.AuthEntities;
 
 namespace OllaInvoice.Data
@@ -12,5 +13,6 @@ namespace OllaInvoice.Data
         }
 
         public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
     }
 }

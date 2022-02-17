@@ -155,6 +155,57 @@ namespace OllaInvoice.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Invoices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Number = table.Column<string>(type: "TEXT", nullable: false),
+                    BusinessName = table.Column<string>(type: "TEXT", nullable: false),
+                    CustomerName = table.Column<string>(type: "TEXT", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    AppUserId = table.Column<string>(type: "TEXT", nullable: true),
+                    Tax = table.Column<double>(type: "REAL", nullable: false),
+                    Discount = table.Column<double>(type: "REAL", nullable: false),
+                    ImageUrl = table.Column<string>(type: "TEXT", nullable: true),
+                    Account = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CustomerEmail = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invoices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Invoices_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Item",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Units = table.Column<int>(type: "INTEGER", nullable: false),
+                    PricePerUnit = table.Column<double>(type: "REAL", nullable: false),
+                    InvoiceId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Item", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Item_Invoices_InvoiceId",
+                        column: x => x.InvoiceId,
+                        principalTable: "Invoices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -191,6 +242,16 @@ namespace OllaInvoice.Data.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invoices_AppUserId",
+                table: "Invoices",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Item_InvoiceId",
+                table: "Item",
+                column: "InvoiceId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -211,7 +272,13 @@ namespace OllaInvoice.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Item");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Invoices");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

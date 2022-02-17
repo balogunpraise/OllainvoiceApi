@@ -1,17 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using OllaInvoice.Api.ApiResponses;
 using OllaInvoice.Api.AuthModels;
+using OllaInvoice.Api.Services;
 using OllaInvoice.Api.Utility;
 using OllaInvoice.Entities.AuthEntities;
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OllaInvoice.Api.Controllers
@@ -21,53 +17,17 @@ namespace OllaInvoice.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
-
-        private readonly IConfiguration _configuration;
         private readonly ISendEmail _sendEmail;
         private readonly SignInManager<AppUser> _signInManager;
-
-        public AuthController(UserManager<AppUser> userManager, 
-            IConfiguration configuration, ISendEmail sendEmail, SignInManager<AppUser> signInManager)
+        private readonly ITokenService _token;
+     
+        public AuthController(UserManager<AppUser> userManager, ISendEmail sendEmail,
+            SignInManager<AppUser> signInManager, ITokenService token)
         {
             _userManager = userManager;
-            _configuration = configuration;
             _sendEmail = sendEmail;
             _signInManager = signInManager;
-        }
-
-
-        [HttpPost]
-        [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
-        {
-            var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-            {
-                var userRoles = await _userManager.GetRolesAsync(user);
-                var authClaims = new List<Claim>()
-                {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                };
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-                var token = new JwtSecurityToken(
-                    issuer: _configuration["JWT:ValidIssuer"],
-                    audience: _configuration["JWT:ValidAudience"],
-                    expires: DateTime.Now.AddHours(3),
-                    claims: authClaims,
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                    );
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
-                });
-            }
-            return Unauthorized();
+            _token = token;
         }
 
 
@@ -75,52 +35,77 @@ namespace OllaInvoice.Api.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var userExists = await _userManager.FindByNameAsync(model.UserName);
+            var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponses { Status = "Error", Message = "User already exists!" });
 
-            AppUser user = new AppUser()
+            AppUser user = new()
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.UserName
+                UserName = model.Username
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                string confirmationLink = Url.Action("ConfirmEmail", "Auth", new { user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                var confirm = new ConfirmEmailModel
-                {
-                    Username = user.FirstName,
-                    Url = confirmationLink
-                };
-                await _sendEmail.SendConfirmationEmailAsync(user.Email, "Confirm your email",
-                    /*$"Click the link to confirm you email {confirmationLink}"*/ System.IO.File.ReadAllText(@"C:\Users\David\Desktop\Project\OllaInvoice\OllaInvoice.Api\Templates\confirmemail.cshtml"));
+                string confirmationLink = Url.Action("ConfirmEmail", "Auth", new { user.Email, code = code }, protocol: HttpContext.Request.Scheme);
+                string str = HelperMethods.GetTemplateString().Replace("#url", confirmationLink).Replace("#name", user.FirstName);
+                await _sendEmail.SendConfirmationEmailAsync(user.Email, "Confirm your email", str);
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return Ok(new AuthResponses { Status = "Success", Message = "User created successfully!", Data=user });
+                return Ok(new AuthResponses { Status = "Success", Message = "User created successfully!", Data = user });
             }
-            else return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponses { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+            else return StatusCode(StatusCodes.Status400BadRequest, new AuthResponses { Status = "Error", Message = "User creation failed! Please check user details and try again." });
         }
 
 
-        [HttpGet]
-        [Route("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+
+
+
+        [HttpPost]
+        [Route("login")]
+        public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginModel model)
         {
-            if (userId == null || code == null)
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null) return StatusCode(StatusCodes.Status401Unauthorized, new AuthResponses { Status = "Error", Message = "Check credentials and try again" });
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+            if (!result.Succeeded) return StatusCode(StatusCodes.Status401Unauthorized);
+            return new LoginResponseDto
+            {
+                Email = user.Email,
+                Username = user.UserName,
+                Token = _token.CreateToken(user)
+            };
+        }
+
+
+        
+
+
+        [HttpGet]
+        [Route("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string email, string code)
+        {
+            if (email == null || code == null)
             {
                 throw new Exception("Encountered an error");
             }
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
                 throw new Exception("Encountered an error");
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
-            return RedirectToAction(result.Succeeded ? "Login" : "Error");
+            if (result.Succeeded)
+            {
+                return StatusCode(StatusCodes.Status200OK, new AuthResponses { Status = "Success", Message = "User verified successfully" });
+            }
+            else return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponses { Status="Erroe", Message="Something went wrong"});
+              
         }
+
+
     }
 }

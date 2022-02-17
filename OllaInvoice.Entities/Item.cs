@@ -3,9 +3,9 @@
 namespace OllaInvoice.Entities
 {
 
-    public class Item 
+    public class Item : BaseEntity
     {
-       
+        
         [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
 

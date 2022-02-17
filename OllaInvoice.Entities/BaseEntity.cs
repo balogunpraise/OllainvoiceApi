@@ -4,6 +4,6 @@ namespace OllaInvoice.Entities
 {
     public class BaseEntity
     {
-        public Guid Id { get; set; } 
+        public int Id { get; set; } 
     }
 }

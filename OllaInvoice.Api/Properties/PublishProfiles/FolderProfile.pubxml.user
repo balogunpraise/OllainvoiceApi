@@ -4,7 +4,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <_PublishTargetUrl>C:\Users\David\Desktop\Project\OllaInvoice\OllaInvoice.Api\bin\Release\net5.0\publish\</_PublishTargetUrl>
-    <History>True|2022-02-14T09:32:27.9100241Z;</History>
+    <_PublishTargetUrl>C:\Ollasystems\OllaInvoice</_PublishTargetUrl>
+    <History>True|2022-02-16T14:20:41.7263355Z;True|2022-02-16T15:02:45.5690105+01:00;True|2022-02-16T14:58:19.4440090+01:00;True|2022-02-16T10:00:39.1942056+01:00;True|2022-02-15T22:42:54.1703862+01:00;True|2022-02-15T16:27:14.5970889+01:00;True|2022-02-15T16:14:56.0665541+01:00;True|2022-02-15T15:49:14.6421990+01:00;True|2022-02-15T15:17:08.2037693+01:00;True|2022-02-14T23:03:17.9015234+01:00;True|2022-02-14T22:58:13.7129898+01:00;True|2022-02-14T22:50:15.5867876+01:00;True|2022-02-14T22:48:59.8378931+01:00;True|2022-02-14T22:45:40.9450880+01:00;True|2022-02-14T15:14:53.3962926+01:00;True|2022-02-14T15:03:45.0352045+01:00;True|2022-02-14T14:57:27.5867661+01:00;True|2022-02-14T14:15:31.9813897+01:00;True|2022-02-14T14:05:23.3874121+01:00;True|2022-02-14T10:32:27.9100241+01:00;</History>
   </PropertyGroup>
 </Project>

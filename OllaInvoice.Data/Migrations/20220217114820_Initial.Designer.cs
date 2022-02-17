@@ -9,7 +9,7 @@ using OllaInvoice.Data;
 namespace OllaInvoice.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20220213162453_Initial")]
+    [Migration("20220217114820_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -216,6 +216,82 @@ namespace OllaInvoice.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("OllaInvoice.Entities.Invoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Account")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BusinessName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CustomerEmail")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Discount")
+                        .HasColumnType("REAL");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Tax")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Invoices");
+                });
+
+            modelBuilder.Entity("OllaInvoice.Entities.Item", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("InvoiceId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("PricePerUnit")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("Units")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.ToTable("Item");
+                });
+
             modelBuilder.Entity("OllaInvoice.Entities.AuthEntities.AppUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -278,6 +354,32 @@ namespace OllaInvoice.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("OllaInvoice.Entities.Invoice", b =>
+                {
+                    b.HasOne("OllaInvoice.Entities.AuthEntities.AppUser", "AppUser")
+                        .WithMany("Invoice")
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("OllaInvoice.Entities.Item", b =>
+                {
+                    b.HasOne("OllaInvoice.Entities.Invoice", null)
+                        .WithMany("Items")
+                        .HasForeignKey("InvoiceId");
+                });
+
+            modelBuilder.Entity("OllaInvoice.Entities.Invoice", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("OllaInvoice.Entities.AuthEntities.AppUser", b =>
+                {
+                    b.Navigation("Invoice");
                 });
 #pragma warning restore 612, 618
         }

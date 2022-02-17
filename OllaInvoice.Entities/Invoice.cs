@@ -1,17 +1,24 @@
-﻿using System;
+﻿using OllaInvoice.Entities.AuthEntities;
+using OllaInvoice.Entities.Dtos;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace OllaInvoice.Entities
 {
-    public class Invoice 
+    public class Invoice : BaseEntity
     {
+        [Required]
         public string Number { get; set; }
+        [Required]
         public string BusinessName { get; set; }
+        [Required]
         public string CustomerName { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public DateTime DueDate { get; set; } = DateTime.Now.AddMonths(1);
-        public virtual List<Item> Items { get; set; } = new List<Item>();
+        public virtual IList<Item> Items { get; set; } = new List<Item>();
+        public AppUser AppUser { get; set; } //newly added
         public double Tax { get; set; } 
         public double Discount { get; set; }
         public string ImageUrl { get; set; }
@@ -23,7 +30,7 @@ namespace OllaInvoice.Entities
         {
             double calculatedFees ;
             double taxFees;
-            calculatedFees = SubTotal - (SubTotal * (Discount / 100));
+            calculatedFees = SubTotal - Discount;
             taxFees = SubTotal * Tax / 100;
             return calculatedFees + taxFees;
         }
@@ -35,13 +42,14 @@ namespace OllaInvoice.Entities
         }
         public double CalculateDiscount()
         {
-            var discount = SubTotal * (Discount / 100);
+            var discount = Discount;
             return discount;
         }
         public double AmountDue => CalculatedFees();
         public double CalculatedWithDiscount => CalculateDiscount();
         public double TaxFees => CalculateTax();
         public bool Account { get; set; }
+        [Required]
         public string CustomerEmail { get; set; }
     }
 
