@@ -402,3 +402,5 @@ C:\Users\David\Desktop\Project\OllaInvoice\OllaInvoice.Api\obj\Release\net5.0\Ol
 C:\Users\David\Desktop\Project\OllaInvoice\OllaInvoice.Api\obj\Release\net5.0\ref\OllaInvoice.Api.dll
 C:\Users\David\Desktop\Project\OllaInvoice\OllaInvoice.Api\obj\Release\net5.0\OllaInvoice.Api.pdb
 C:\Users\David\Desktop\Project\OllaInvoice\OllaInvoice.Api\obj\Release\net5.0\OllaInvoice.Api.genruntimeconfig.cache
+C:\Users\David\Desktop\Project\OllaInvoice\OllaInvoice.Api\bin\Release\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\David\Desktop\Project\OllaInvoice\OllaInvoice.Api\bin\Release\net5.0\Newtonsoft.Json.dll

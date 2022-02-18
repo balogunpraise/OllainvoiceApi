@@ -468,11 +468,11 @@ td {
                             <tr>
                                 <td>
                                     <div style = 'text-align: center; margin-bottom: 10px;' >
-                                        <h1 style='font-family: Graphik-thin; color: #FFFFFF;'>Welcome!</h>
+                                        <h1 style='font-family: Graphik-thin; color: #FFFFFF; margin-top: 2rem'>Welcome!</h>
                                     </div>
-                                    <div class='text main_msg' style='text-align: left; color: #FFFFFF;'>
-                                        <p style = 'margin: 0; margin-bottom: 10px; font-family: Graphik-thin;' > Hi, #name,</p>
-                                        <p style = 'margin: 0; font-family: Graphik-thin;' >
+                                    <div class='text main_msg' style='text-align: left; color: #2C4A97;'>
+                                        <p style = 'margin: 0; margin-bottom: 10px; font-family:Graphik; color:#2C4A97;' > Hi, #name,</p>
+                                        <p style = 'margin: 0; font-family: Graphik; color:#2C4A97; text-align: center;' >
                                             How do you plan to kick off this new month? What will you like to achieve?
                                             I have an idea! A great way you can start this month is to apply for our March 2022 cohort as applications are still open!
                                         </p>

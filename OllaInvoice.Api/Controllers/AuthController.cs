@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OllaInvoice.Api.ApiResponses;
@@ -35,7 +34,7 @@ namespace OllaInvoice.Api.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            var userExists = await _userManager.FindByNameAsync(model.Username);
+            var userExists = await _userManager.FindByNameAsync(model.BusinessName);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponses { Status = "Error", Message = "User already exists!" });
 
@@ -45,7 +44,7 @@ namespace OllaInvoice.Api.Controllers
                 LastName = model.LastName,
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
+                UserName = model.BusinessName
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
@@ -75,7 +74,7 @@ namespace OllaInvoice.Api.Controllers
             return new LoginResponseDto
             {
                 Email = user.Email,
-                Username = user.UserName,
+                BusinessName = user.UserName,
                 Token = _token.CreateToken(user)
             };
         }
@@ -84,7 +83,7 @@ namespace OllaInvoice.Api.Controllers
         
 
 
-        [HttpGet]
+        [HttpPost]
         [Route("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string email, string code)
         {
@@ -105,7 +104,5 @@ namespace OllaInvoice.Api.Controllers
             else return StatusCode(StatusCodes.Status500InternalServerError, new AuthResponses { Status="Erroe", Message="Something went wrong"});
               
         }
-
-
     }
 }

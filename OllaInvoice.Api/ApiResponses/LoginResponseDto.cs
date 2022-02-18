@@ -8,7 +8,7 @@ namespace OllaInvoice.Api.ApiResponses
     public class LoginResponseDto
     {
         public string Email { get; set; }
-        public string Username { get; set; }
+        public string BusinessName { get; set; }
         public string Token { get; set; }
     }
 }

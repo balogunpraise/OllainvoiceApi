@@ -1,5 +1,4 @@
 ﻿using OllaInvoice.Entities.AuthEntities;
-using OllaInvoice.Entities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -34,6 +33,13 @@ namespace OllaInvoice.Entities
             taxFees = SubTotal * Tax / 100;
             return calculatedFees + taxFees;
         }
+
+        public static int GetRandomNumber()
+        { 
+            Random generator = new();
+            return generator.Next(100000, 1000000);
+        }
+        
 
         public double CalculateTax()
         {

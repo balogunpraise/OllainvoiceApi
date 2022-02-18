@@ -43,11 +43,11 @@ namespace OllaInvoice.Data
 
 
 
-        public async Task<Invoice> GetInvoiceById(int id)
+        public async Task<Invoice> GetInvoiceById(int id, string userId)
         {
             try
             {
-                var invoice = await _context.Invoices.Where(x => x.Id == id).Include(x=>x.Items).FirstOrDefaultAsync();
+                var invoice = await _context.Invoices.Where(x => x.Id == id && x.AppUser.Id == userId).Include(x=>x.Items).FirstOrDefaultAsync();
                 return invoice;
             }
             catch(Exception ex)

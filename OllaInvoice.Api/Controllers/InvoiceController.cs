@@ -7,6 +7,7 @@ using OllaInvoice.Entities;
 using OllaInvoice.Entities.AuthEntities;
 using OllaInvoice.Entities.Dtos;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -30,15 +31,12 @@ namespace OllaInvoice.Api.Controllers
 
         [HttpPost("add-invoice")]
         [Authorize]
-        public async Task<IActionResult> AddAnInvoice(InvoiceDto invoice)
+        public async Task<IActionResult> AddAnInvoice(InvoiceRequestDto invoice)
         {
-            //var clainms = User.Claims(User.FindFirst(c => c.Type == ))
+            
             var user = await  _userManager.GetUserAsync(HttpContext.User);
             try
             {
-                //var claims = User.Claims;
-                //claims.First(c => c.Type == "").Value
-                
                 Invoice newInvoice = new()
                 {
                     CustomerName = invoice.CustomerName,
@@ -47,13 +45,16 @@ namespace OllaInvoice.Api.Controllers
                     ImageUrl = invoice.ImageUrl,
                     BusinessName = invoice.BusinessName,
                     Account = invoice.Account,
-                    Items = invoice.Items,
-                    Number = invoice.Number,
-                    //AppUser = user,
+                    Items = invoice.Items.Select(i => new Item
+                    {
+                        Description = i.Description,
+                        PricePerUnit = i.PricePerUnit,
+                        Units = i.Units
+                    }).ToList(),
+                    Number = Invoice.GetRandomNumber().ToString(),
                     CustomerEmail = invoice.CustomerEmail
                 };
                 await _invoiceRepository.AddInvoice(user, newInvoice);
-                //user.Invoice.Add(newInvoice);
                 await _em.SendInvoiceAsAttachmentAsync(newInvoice.CustomerEmail, newInvoice.Id);
                 return Ok(newInvoice.Id);
             }
@@ -65,7 +66,7 @@ namespace OllaInvoice.Api.Controllers
 
         [HttpGet("/list-of-invoice")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Invoice>>> GetAllInvoice()
+        public async Task<ActionResult<IEnumerable<InvoiceDto>>> GetAllInvoice()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             var invoices = await _invoiceRepository.GetAllInvoiceAsync(userId);
@@ -73,10 +74,19 @@ namespace OllaInvoice.Api.Controllers
         }
 
 
-        [HttpGet("/invoice{id}")]
-        public async Task<ActionResult<Invoice>> GetInvoiceById(int id)
+        [HttpGet("/invoice/{id}")]
+        [Authorize]
+        public async Task<ActionResult<InvoiceDto>> GetInvoiceById(int id)
         {
-            return Ok(await _invoiceRepository.GetInvoiceById(id));
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+       
+            if (user != null)
+            {
+                var fetchedInvoice = await _invoiceRepository.GetInvoiceById(id, user.Id.ToString());
+
+                return AsDto.ReturnAsDto(fetchedInvoice);
+            }
+            return BadRequest("There is no invoice with the Id specified");
         }
 
     }

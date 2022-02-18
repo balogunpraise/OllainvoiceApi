@@ -10,7 +10,7 @@ namespace OllaInvoice.Data
         Task AddInvoice(AppUser user, Invoice invoice);
         Task<IEnumerable<Invoice>> GetAllInvoiceAsync(string id);
         Task<IEnumerable<Invoice>> GetAllInvoiceAsync();
-        Task<Invoice> GetInvoiceById(int id);
+        Task<Invoice> GetInvoiceById(int id, string userId);
         Task<Invoice> GetCurrentInvoice(int id);
 
     }

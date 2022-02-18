@@ -13,7 +13,8 @@ namespace OllaInvoice.Api.AuthModels
         [RegularExpression("^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$", ErrorMessage = "Must be a valid email")]
         public string Email { get; set; }
 
-        public string Username { get; set; }
+        [Required]
+        public string BusinessName { get; set; }
 
         [Required(ErrorMessage = "Please enter password")]
         [DataType(DataType.Password)]
